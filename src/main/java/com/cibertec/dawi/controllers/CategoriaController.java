@@ -27,7 +27,7 @@ public class CategoriaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Categoria> obtenerCategoriaPorId(@PathVariable int id) {
+    public ResponseEntity<Categoria> obtenerCategoriaPorId(@PathVariable String id) {
         Categoria categoria = categoriaService.obtenerCategoriaPorId(id);
         if (categoria != null) {
             return ResponseEntity.ok(categoria);
@@ -43,10 +43,10 @@ public class CategoriaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Categoria> actualizarCategoria(@PathVariable int id, @RequestBody Categoria categoria) {
+    public ResponseEntity<Categoria> actualizarCategoria(@PathVariable String id, @RequestBody Categoria categoria) {
         Categoria categoriaExistente = categoriaService.obtenerCategoriaPorId(id);
         if (categoriaExistente != null) {
-            categoria.setCodigo(id);
+            categoria.setId(id);
             Categoria categoriaActualizada = categoriaService.actualizarCategoria(categoria);
             return ResponseEntity.ok(categoriaActualizada);
         } else {

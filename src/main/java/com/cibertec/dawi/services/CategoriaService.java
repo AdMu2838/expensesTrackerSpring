@@ -11,7 +11,7 @@ public class CategoriaService {
 		return null;
 	}
 
-	public Categoria obtenerCategoriaPorId(int id) {
+	public Categoria obtenerCategoriaPorId(String id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
