@@ -2,33 +2,39 @@ package com.cibertec.dawi.services;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.cibertec.dawi.models.Registro;
+import com.cibertec.dawi.repositories.IRegistroRepository;
 
-public class RegistroService {
+@Service
+public class RegistroService{
+    private final IRegistroRepository registroRepository;
 
-	public List<Registro> obtenerRegistros() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Autowired
+    public RegistroService(IRegistroRepository registroRepository) {
+        this.registroRepository = registroRepository;
+    }
 
-	public Registro obtenerRegistroPorId(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public List<Registro> obtenerRegistrosParaExportar(int codigoUsuario) {
+        return registroRepository.obtenerRegistrosParaExportar(codigoUsuario);
+    }
 
-	public Registro crearRegistro(Registro registro) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public List<Registro> listarIngresos(int codigoUsuario) {
+        return registroRepository.findByImpactoGreaterThan0(codigoUsuario);
+    }
 
-	public Registro actualizarRegistro(String id, Registro registro) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public List<Registro> listarEgresos(int codigoUsuario) {
+        return registroRepository.findByImpactoLessThan0(codigoUsuario);
+    }
 
-	public boolean eliminarRegistro(String id) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public List<List<Registro>> obtenerImpactosYFecha(int codigoUsuario) {
+        return registroRepository.obtenerImpactosYFecha(codigoUsuario);
+    }
+
+    public void eliminar(String codigoRegistro, int codigoUsuario) {
+        registroRepository.eliminar(codigoRegistro, codigoUsuario);
+    }
 
 }
