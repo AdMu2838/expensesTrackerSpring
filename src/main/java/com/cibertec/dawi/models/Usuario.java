@@ -1,12 +1,14 @@
 package com.cibertec.dawi.models;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 public class Usuario implements Serializable {
@@ -28,6 +30,17 @@ public class Usuario implements Serializable {
 
     @Column(name = "presu_usu")
     private double presupuesto;
+
+    @OneToMany(mappedBy = "usuario")
+    List<Registro> registros;
+
+    public List<Registro> getRegistros() {
+      return registros;
+    }
+
+    public void setRegistros(List<Registro> registros) {
+      this.registros = registros;
+    }
 
     public int getId() {
         return id;
