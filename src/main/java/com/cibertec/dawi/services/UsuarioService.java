@@ -2,33 +2,34 @@ package com.cibertec.dawi.services;
 
 import java.util.List;
 
-import com.cibertec.dawi.models.Usuario;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.cibertec.dawi.models.Usuario;
+import com.cibertec.dawi.repositories.IUsuarioRepository;
+@Service
 public class UsuarioService {
 
-	public List<Usuario> obtenerUsuarios() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	private final IUsuarioRepository usuarioRepository;
 
-	public Usuario obtenerUsuarioPorId(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Autowired
+    public UsuarioService(IUsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
 
-	public Usuario crearUsuario(Usuario usuario) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Usuario buscarXEmail(String email) {
+        return usuarioRepository.findByEmail(email);
+    }
 
-	public Usuario actualizarUsuario(int id, Usuario usuario) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public void eliminar(int cod) {
+        usuarioRepository.deleteById(cod);
+    }
 
-	public boolean eliminarUsuario(int id) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public int actualizar(Usuario usuario) {
+        return usuarioRepository.actualizar(usuario);
+    }
 
+    public Usuario agregar(Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
 }
