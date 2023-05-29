@@ -4,49 +4,32 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "tb_registro")
 public class Registro {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_reg")
-    String id;
+    private String id;
 
-    @Column(name = "desc_reg")
-    String descripcion;
+    @Column(name = "desc_reg", nullable = false)
+    private String descripcion;
+
+    @Column(name = "impac_reg", nullable = false)
+    private double impacto;
+
+    @Column(name = "fec_reg", nullable = false)
+    private Date fecha;
 
     @ManyToOne
     @JoinColumn(name = "cod_cat")
-    Categoria categoria;
-
-    @Column(name = "impac_reg")
-    double impacto;
-
-    @Column(name = "fec_reg")
-    Date fecha;
+    private Categoria categoria;
 
     @ManyToOne
     @JoinColumn(name = "id_usu")
-    Usuario usuario;
-
-    public Registro() {}
-
-    public Registro(String id, String descripcion, Categoria categoria, double impacto, Date fecha, Usuario usuario) {
-        this.id = id;
-        this.descripcion = descripcion;
-        this.categoria = categoria;
-        this.impacto = impacto;
-        this.fecha = fecha;
-        this.usuario = usuario;
-    }
+    private Usuario usuario;
 
     public String getId() {
         return id;
@@ -64,14 +47,6 @@ public class Registro {
         this.descripcion = descripcion;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
     public double getImpacto() {
         return impacto;
     }
@@ -86,6 +61,14 @@ public class Registro {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 
     public Usuario getUsuario() {
