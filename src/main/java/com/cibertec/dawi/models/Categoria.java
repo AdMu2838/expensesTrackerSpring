@@ -1,6 +1,5 @@
 package com.cibertec.dawi.models;
 
-
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,4 +45,3 @@ public class Categoria {
         this.tipo = tipo;
     }
 }
-
