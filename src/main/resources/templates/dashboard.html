@@ -1,6 +1,5 @@
-
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta charset="UTF-8">
@@ -40,10 +39,6 @@ i.bx {
 </style>
 </head>
 <body>
-	<%
-	
-	UsuarioDTO usuario = (UsuarioDTO) request.getSession().getAttribute("objUsuario");
-	%>
 
 	<div class="d-flex flex-column p-3 bg-light et-left-sidebar">
 		<p class="h4 fw-bold" style="text-align: center">EXPENSES TRACKER</p>
@@ -63,37 +58,91 @@ i.bx {
 		</ul>
 		<hr>
 		<span class="fw-bold d-flex align-items-center">
-			<i class='bx bxs-user-circle'></i> <%=usuario.getNombre()%>
-			<a class="link-danger ps-3" style="height: 24px" href="dashboard?accion=logout"> <i class='bx bx-log-out'></i> </a> 	
+			<i class='bx bxs-user-circle'></i><span th:text="${loggedUser.getNombre()}"></span>
+			<a class="link-danger ps-3" style="height: 24px" th:href="@{/logout}"> <i class='bx bx-log-out'></i> </a> 	
 			
 		</span>
 		
 	</div>
 	<main class="flex-fill p-3">
 		<div id="defaultShowedView" data-view="view_listar">
-			<h2>
-				Bienvenido:
-				<%=usuario.getNombre()%></h2>
+			<h2 th:text="'Bienvenido: ' + ${loggedUser.getNombre()}"></h2>
 			<hr>
 			<div class="d-flex align-items-center mb-2">
 				<span class="h3 mb-0 me-2">Ingresos del mes</span> <img
-					src="img/profit.png" />
+					th:src="@{/img/profit.png}" />
 			</div>
 
-			<%
-			ArrayList<RegistroDTO> listaIngresos = (ArrayList<RegistroDTO>) request.getAttribute("lista_registro_ingresos");
-			%>
-			<t:tablaRegistro idTabla="tablaIngresos" listaRegistros="<%=listaIngresos%>"></t:tablaRegistro>
+	<table id='tablaIngresos' class='table table-hover'>
+	<thead>
+		<tr>
+			<th scope='col'>CODIGO</th>
+			<th scope='col'>DESCRIPCION</th>
+			<th scope='col'>IMPACTO</th>
+			<th scope='col'>CATEGORIA</th>
+			<th scope='col'>FECHA</th>
+			<th scope='col' colspan='2'>ACCIONES</th>
+		</tr>
+	</thead>
+		<tbody id='tablaIngresosBody' class='table-group-divider'>
+		
+				<tr th:each="log : ${profitLogs}">
+					<th scope='row' th:text="${log.getId()}"></th>
+					<td th:text="${log.getDescripcion()}"></td>
+					<td th:text="${log.getImpacto()}"></td>
+					<td th:text="${log.getCategoria().getNombre()}"></td>
+					<td th:text="${log.getFormattedFecha()}"></td>
+					<td align='center'>
+						<img th:attr="data-regid=${log.getId()},data-regdesc=${log.getDescripcion()},data-regimpact=${log.getImpacto()},data-regidcat=${log.getCategoria().getCodigo()}" role='button' th:src='@{/img/editar.png}' title='Editar' class='btnTableActionEdit btn btn-light' data-bs-toggle='modal' data-bs-target='#tableEditModal'>
+					</td>
+					<td align='center'>
+						<img role='button' th:src='@{/img/eliminar.png}' title='Eliminar' class='btnTableActionDelete btn btn-light' th:attr="data-regid=${log.getId()}">
+					</td>
+				</tr>
 			
+		
+		</tbody>
+		</table>
+
+
+
 			<div class="d-flex align-items-center mb-2">
 				<span class="h3 mb-0 me-2">Gastos del mes</span> <img
 					src="img/loss.png" />
 			</div>
-			<%
-			ArrayList<RegistroDTO> listaEgresos = (ArrayList<RegistroDTO>) request.getAttribute("lista_registro_egresos");
-			%>
 			
-			<t:tablaRegistro idTabla="tablaEgresos" listaRegistros="<%=listaEgresos%>"></t:tablaRegistro>
+			
+			<table id='tablaEgresos' class='table table-hover'>
+	<thead>
+		<tr>
+			<th scope='col'>CODIGO</th>
+			<th scope='col'>DESCRIPCION</th>
+			<th scope='col'>IMPACTO</th>
+			<th scope='col'>CATEGORIA</th>
+			<th scope='col'>FECHA</th>
+			<th scope='col' colspan='2'>ACCIONES</th>
+		</tr>
+	</thead>
+		<tbody id='tablaEgresosBody' class='table-group-divider'>
+		
+				<tr th:each="log : ${expenseLogs}">
+					<th scope='row' th:text="${log.getId()}"></th>
+					<td th:text="${log.getDescripcion()}"></td>
+					<td th:text="${log.getImpacto()}"></td>
+					<td th:text="${log.getCategoria().getNombre()}"></td>
+					<td th:text="${log.getFormattedFecha()}"></td>
+					<td align='center'>
+						<img th:attr="data-regid=${log.getId()},data-regdesc=${log.getDescripcion()},data-regimpact=${log.getImpacto()},data-regidcat=${log.getCategoria().getCodigo()}" role='button' th:src='@{/img/editar.png}' title='Editar' class='btnTableActionEdit btn btn-light' data-bs-toggle='modal' data-bs-target='#tableEditModal'>
+					</td>
+					<td align='center'>
+						<img role='button' th:src='@{/img/eliminar.png}' title='Eliminar' class='btnTableActionDelete btn btn-light' th:attr="data-regid=${log.getId()}">
+					</td>
+				</tr>
+			
+		
+		</tbody>
+		</table>
+
 			
 		</div>
 		<div data-view="view_agregar" hidden="true">
@@ -163,7 +212,7 @@ i.bx {
 			<div class="d-flex flex-column ps-5 pe-5">
 				<div>
 					<div class="d-flex justify-content-center mb-3">
-						<span class="fw-bold p-4 rounded bg-light me-3 border border-dark">Presupuesto Base: <%=usuario.getPresupuesto()%></span>
+						<span class="fw-bold p-4 rounded bg-light me-3 border border-dark" th:text="'Presupuesto Base: ' + ${loggedUser.getPresupuesto()}"></span>
 						<span class="fw-bold p-4 rounded bg-light ms-3 border border-dark" id="chartPresupuesto_preActual">Presupuesto Actual:</span>
 					</div>
 					<div style="height: 250px">
@@ -192,18 +241,18 @@ i.bx {
 				<div class="mb-3">
 					<label for="input_nombre">Nombre de usuario</label> <input
 						type="text" name="usu_nombre" id="input_nombre"
-						class="form-control" value='<%=usuario.getNombre()%>'>
+						class="form-control" th:value='${loggedUser.getNombre()}'>
 				</div>
 
 				<div class="mb-3">
 					<label for="input_email">Correo electrónico</label> <input
 						type="email" name="usu_email" id="input_email"
-						class="form-control" value='<%=usuario.getEmail()%>'>
+						class="form-control" th:value='${loggedUser.getEmail()}'>
 				</div>
 				<div class="mb-3">
 					<label for="input_pass">Contraseña</label> <input type="password"
 						name="usu_pass" id="input_pass" class="form-control"
-						value='<%=usuario.getPassword()%>'>
+						th:value='${loggedUser.getPassword()}'>
 				</div>
 
 				<button type="button" id="editSettingsForm_btnSend"
@@ -212,7 +261,14 @@ i.bx {
 
 			</form>
 			<br>
-			<button id="exportRegBtn" role="button" class="btn btn-success">Exportar Registros</button>
+			<button id="exportRegBtn" role="button" class="btn btn-success">Exportar Registros CSV</button>
+			<br>
+			<br>
+			<div>
+				<a th:href="@{/dashboard/registro_report_pdf}">
+					<button role="button" class="btn btn-danger">Crear reporte PDF</button>
+				</a>
+			</div>
 		</div>
 	</main>
 
@@ -299,9 +355,9 @@ i.bx {
 		crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-	<script type="module" src="./js/dashboard.js"></script>
-	<script type="module" src="./js/dashboard_agregar.js"></script>
-	<script type="text/javascript" src="./js/dashboard_estadisticas.js"></script>
-	<script type="text/javascript" src="./js/dashboard_ajustes.js"></script>
+	<script type="module" th:src="@{/js/dashboard.js}"></script>
+	<script type="module" th:src="@{/js/dashboard_agregar.js}"></script>
+	<script type="text/javascript" th:src="@{/js/dashboard_estadisticas.js}"></script>
+	<script type="text/javascript" th:src="@{/js/dashboard_ajustes.js}"></script>
 </body>
 </html>

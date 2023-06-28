@@ -61,7 +61,7 @@ function enviarRegistro(){
 	const data = new URLSearchParams( new FormData(document.forms["addRegForm"])).toString();
 	
 	
-	fetch("DashboardServlet?accion=agregarRegistro",{
+	fetch("/dashboard/agregar_registro",{
 		
 		method: 'POST',
 		credentials: "include",
