@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-nocheck
 
 /**
 	@typedef Registro
@@ -62,7 +62,7 @@ async function updateTables(){
 
 async function queryRegEgresos(){
 	
-	return fetch("DashboardServlet?accion=queryRegEgresos", {
+	return fetch("/dashboard/queryRegEgresos", {
 		method:'GET',
 		credentials: 'include'
 	})
@@ -75,7 +75,7 @@ async function queryRegEgresos(){
 
 async function queryRegIngresos(){
 	
-	return fetch("DashboardServlet?accion=queryRegIngresos", {
+	return fetch("/dashboard/queryRegIngresos", {
 		method:'GET',
 		credentials: 'include'
 	})

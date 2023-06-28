@@ -1,5 +1,7 @@
 package com.cibertec.dawi.models;
 
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -7,10 +9,17 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.springframework.data.annotation.Transient;
 
 @Entity
-public class Registro {
-    @Id
+@Table(name="tb_registro")
+public class Registro implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @Column(name = "id_reg")
     private String id;
 
@@ -31,6 +40,8 @@ public class Registro {
     @JoinColumn(name = "id_usu")
     private Usuario usuario;
 
+    private transient SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    
     public String getId() {
         return id;
     }
@@ -57,6 +68,10 @@ public class Registro {
 
     public Date getFecha() {
         return fecha;
+    }
+    
+    public String getFormattedFecha() {
+    	return formatter.format(fecha);
     }
 
     public void setFecha(Date fecha) {

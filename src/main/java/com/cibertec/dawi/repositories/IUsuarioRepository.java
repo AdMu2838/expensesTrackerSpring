@@ -1,25 +1,22 @@
 package com.cibertec.dawi.repositories;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cibertec.dawi.models.Usuario;
 
+@Repository
 public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
 
 	//Busqueda de un usuario especifico mediante email
-	public Usuario findByEmail (String email);
-	
-	//Eliminacion de un usuario especifico mediante codigo
-	public void deleteById(int cod);
+	public Optional<Usuario> findByEmail (String email);
 	
 	//Actualizacion de un usuario especifico mediante nuevo objeto de tipo UsuarioDTO
 	@Procedure("usp_actualizarUsuario")
-	public int actualizar (Usuario usuario);
-	
-	//Creacion de un nuevo usuario mediante nuevo objeto de tipo UsuarioDTO
-	public Usuario agregar (Usuario usuario);
-
-	
+	public void actualizar (int id_usuario, String nom_usuario, String email_usuario, String pass_usuario);
 	
 }

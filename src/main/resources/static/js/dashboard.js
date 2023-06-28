@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-nocheck
 
 import {updateTables} from '../jsModules/dashboardFunctions.js';
 
@@ -26,7 +26,7 @@ const tableEditModalBtnSaveClick = (e)=>{
 	// @ts-expect-error
 	const data = new URLSearchParams( new FormData(document.forms["tableEditModalForm"])).toString();
 	
-	fetch("DashboardServlet?accion=actualizarRegistro", {
+	fetch("/dashboard/actualizar_registro", {
 		
 		method: 'POST',
 		credentials: 'include',
@@ -137,12 +137,13 @@ window.btnTableActionEditClick = (e)=>{
 window.btnTableActionDeleteClick = (e)=>{
 	
 	if (confirm(`¿Seguro que desea eliminar el registro ${e.target.dataset.regid}?`)){
-		
-		fetch(`DashboardServlet?accion=eliminarRegistro&reg_id=${e.target.dataset.regid}`,{
+
+		fetch("/dashboard/eliminar_registro",{
 			
-			method: 'GET',
+			method: 'POST',
 			credentials: 'include',
-			headers: {'Content-Type': "application/x-www-form-urlencoded"}
+			headers: {'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"},
+			body: `reg_id=${e.target.dataset.regid}`
 			
 		})
 		.then((res)=>{
@@ -151,9 +152,7 @@ window.btnTableActionDeleteClick = (e)=>{
 		})
 		.then((data)=>{
 			if (Number.parseInt(data) == 1){
-				
 				updateTables();
-				
 			}
 		})
 		.catch((err)=>{

@@ -6,7 +6,7 @@ const spanPreActual =  document.querySelector("#chartPresupuesto_preActual");
 
 let presupuesto = 0;
 
-fetch("DashboardServlet?accion=queryPresupuesto",{
+fetch("/dashboard/presupuesto",{
 	method: 'GET',
 })
 .then(res=>
@@ -209,7 +209,7 @@ const updateCharts = async ()=>{
 //The graphic works with impact and date of the logs
 const queryGraphicData = async () => {
 	
-	return fetch("DashboardServlet?accion=queryImpactoYFecha", {
+	return fetch("/dashboard/impactos_y_fecha", {
 		method: 'GET',
 		credentials: 'include',
 		headers: {'Content-Type': "application/x-www-form-urlencoded"}
