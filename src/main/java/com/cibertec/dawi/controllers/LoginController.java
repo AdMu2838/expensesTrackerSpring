@@ -1,49 +1,45 @@
 package com.cibertec.dawi.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-import com.cibertec.dawi.models.Usuario;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.cibertec.dawi.services.UsuarioService;
 
 @Controller
 public class LoginController {
 
-    private final UsuarioService usuarioService;
-
-    @Autowired
-    public LoginController(UsuarioService usuarioService) {
-        this.usuarioService = usuarioService;
+    public LoginController() {
+    	super();
     }
 
     @GetMapping("/login")
-    public String login(Model model) {
-        return "login";
+    public String login(HttpServletRequest request, HttpSession session) {
+    	session.setAttribute(
+	         "error", getErrorMessage(request, "SPRING_SECURITY_LAST_EXCEPTION")
+	      ); 
+	    return "login"; 
     }
-
-    @PostMapping("/login")
-    public String validar(@RequestParam("email") String email,
-                          @RequestParam("password") String password,
-                          RedirectAttributes redirectAttributes) {
-        Usuario usuario = usuarioService.buscarXEmail(email);
-
-        if (usuario == null) {
-            redirectAttributes.addFlashAttribute("errorMsj", "No existe tal Email");
-            return "redirect:/login";
-        } else if (!usuario.getPassword().equals(password)) {
-            redirectAttributes.addFlashAttribute("errorMsj", "Contraseña incorrecta");
-            return "redirect:/login";
-        }
-        
-        //Posible codigo para guardar el usuario en una bvariable de sesión u otra forma de autenticación
-        
-        //Consultar si usaremos Spring Security
-
-        return "redirect:/dashboard";
-    }
+    
+    private String getErrorMessage(HttpServletRequest request, String key) {
+        Exception exception = (Exception) request.getSession().getAttribute(key); 
+        String error = ""; 
+        if (exception instanceof BadCredentialsException) { 
+           error = "Invalid username and password!";
+           System.out.println(exception.getMessage());
+           
+        } else if (exception instanceof LockedException) { 
+           error = exception.getMessage(); 
+        } else { 
+           error = "All is good!";
+        } 
+        System.out.println(error);
+        return error;
+     }
 }
